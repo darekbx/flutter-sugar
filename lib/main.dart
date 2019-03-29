@@ -22,6 +22,21 @@ class SugarPage extends StatefulWidget {
   _SugarPageState createState() => _SugarPageState();
 }
 
+class Chart extends CustomPainter {
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint();
+    paint.color = Colors.deepOrange;
+    canvas.drawRect(Rect.fromLTWH(2, 2, size.width - 4, size.height - 4), paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
 class _SugarPageState extends State<SugarPage> {
 
   double _todaysSugar = 22.8;
@@ -45,7 +60,7 @@ class _SugarPageState extends State<SugarPage> {
       color: Colors.blueGrey,
       child: Row(children: <Widget>[
         Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -59,16 +74,22 @@ class _SugarPageState extends State<SugarPage> {
                 ]))
       ]));
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           topInformations(),
+          Container(
+            child: CustomPaint(
+              painter: Chart(), 
+              child: Container(height: 80)
+            )
+          ),
           Expanded(
             child: Container(color: Colors.grey),
           )
