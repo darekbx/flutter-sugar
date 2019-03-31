@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_sugar/model/entry.dart';
 
-// https://github.com/Rahiche/sqlite_demo/blob/master/lib/Database.dart
 class DatabaseProvider {
   DatabaseProvider._();
 
@@ -31,6 +31,25 @@ class DatabaseProvider {
   }
 
   _createModels(Database db) async {
-    await db.execute("");
+    await db.execute("""
+    CREATE TABLE entries (
+      id INTEGER PRIMARY KEY, 
+      name TEXT, 
+      sugar REAL, 
+      date INTEGER
+    )""");
   }
+
+  Future<int> add(Entry entry) async =>
+      await (await database).insert("entries", entry.toMap());
+
+  Future<List<Entry>> list() async {
+    var cursor = await (await database).query("entries", orderBy: "date DESC");
+    return cursor.isNotEmpty
+        ? cursor.map((row) => {Entry.fromMap(row)}).toList()
+        : [];
+  }
+
+  Future<int> delete(int id) async => await (await database)
+      .delete("entries", where: "id = ?", whereArgs: [id]);
 }
