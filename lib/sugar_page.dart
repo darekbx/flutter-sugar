@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chart.dart';
+import 'model/entry.dart';
+import 'repository/repository.dart';
 
 class SugarPage extends StatefulWidget {
   SugarPage({Key key, this.title}) : super(key: key);
@@ -18,6 +20,18 @@ class _SugarPageState extends State<SugarPage> {
   void _incrementCounter() {
     setState(() {
       _todaysSugar += 0.1;
+    });
+
+    debug();
+  }
+
+  void debug() async {
+    var r = Repository();
+    //r.add(Entry(null, "First", 2.8, DateTime.now().millisecondsSinceEpoch));
+    //r.add(Entry(null, "Second", 2.8, DateTime.now().millisecondsSinceEpoch));
+    var results = await r.list();
+    results.forEach((a, b) {
+      print("$a = ${b.length}");
     });
   }
 
