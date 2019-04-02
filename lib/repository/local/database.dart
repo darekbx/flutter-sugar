@@ -47,7 +47,7 @@ class DatabaseProvider {
     var cursor = await (await database).query("entries", orderBy: "timestamp DESC");
     return cursor.isNotEmpty
         ? cursor.map((row) => Entry.fromMap(row)).toList()
-        : [];
+        : List<Entry>();
   }
 
   Future<int> delete(int id) async => await (await database)

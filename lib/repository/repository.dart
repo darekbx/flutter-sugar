@@ -7,7 +7,10 @@ import 'package:flutter_sugar/model/entry.dart';
 class Repository {
   
   Future<Map<String, List<Entry>>> list() async {
-    var entries = await DatabaseProvider.instance.list();
+    List<Entry> entries = await DatabaseProvider.instance.list();
+    if (entries.length == 0) {
+      return Map<String, List<Entry>>();
+    }
     var entriesMap = groupBy<Entry, String>(entries, (entry) => entry.dateTime());
     return Map.from(entriesMap);
   }
