@@ -9,7 +9,9 @@ class Entry {
 
   String dateTime() {
     var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
-    return "${date.year}-${date.month}-${date.day}";
+    var month = date.month.toString().padLeft(2, '0');
+    var day = date.day.toString().padLeft(2, '0');
+    return "${date.year}-$month-$day";
   }
 
   factory Entry.fromMap(Map<String, dynamic> row) =>
