@@ -17,14 +17,12 @@ class SugarPage extends StatefulWidget {
 class _SugarPageState extends State<SugarPage> {
   var repository = Repository();
 
-  void _incrementCounter() {
-    setState(() {});
+  void _incrementCounter(BuildContext context) {
+    //setState(() {});
 
-    //var r = Repository();
-    //r.add(Entry(null, "First", 2.8, DateTime.now().millisecondsSinceEpoch));
-    //r.add(Entry(null, "Second", 4.3, DateTime.now().millisecondsSinceEpoch));
-    // TODO: calculate statistics for info
-    //
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => _entryDialog(context));
   }
 
   @override
@@ -36,21 +34,35 @@ class _SugarPageState extends State<SugarPage> {
         children: <Widget>[_summary(), _chart(), _listContainer()],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () => _incrementCounter(context),
         tooltip: 'Add entry',
         child: Icon(Icons.add),
       ),
     );
   }
 
+  AlertDialog _entryDialog(BuildContext context) {
+    return AlertDialog(
+      title: Center(child: Text("New entry")),
+      content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none, hintText: 'Description')),
+        TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none, hintText: 'Sugar [g]'))
+      ]),
+      actions: <Widget>[],
+    );
+  }
+
   Widget _chart() => Container(
       color: Colors.blueGrey,
-      child: CustomPaint(painter: Chart(), child: Container(height: 80)));
+      child: CustomPaint(painter: Chart(), child: Container(height: 70)));
 
   Widget _summary() => FutureBuilder(
       future: repository.list(),
-      builder: (BuildContext context,
-              AsyncSnapshot<Map<String, List<Entry>>> snapshot) =>
+      builder: (BuildContext context, AsyncSnapshot<Map<String, List<Entry>>> snapshot) =>
           _handleEntriesFuture(snapshot, (data) {
             var allEntries = List<Entry>();
             data.values.forEach((entries) => allEntries.addAll(entries));
@@ -58,12 +70,10 @@ class _SugarPageState extends State<SugarPage> {
           }));
 
   _listContainer() => Expanded(
-        child: FutureBuilder(
-            future: repository.list(),
-            builder: (BuildContext context,
-                    AsyncSnapshot<Map<String, List<Entry>>> snapshot) =>
-                _handleEntriesFuture(snapshot, (data) => _buildListView(data))),
-      );
+      child: FutureBuilder(
+          future: repository.list(),
+          builder: (BuildContext context, AsyncSnapshot<Map<String, List<Entry>>> snapshot) =>
+              _handleEntriesFuture(snapshot, (data) => _buildListView(data))));
 
   _handleEntriesFuture(AsyncSnapshot<Map<String, List<Entry>>> snapshot,
       Function(Map<String, List<Entry>>) callback) {

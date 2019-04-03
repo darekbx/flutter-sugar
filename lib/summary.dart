@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sugar/model/entry.dart';
+import 'color_tool.dart';
 
 class Summary extends StatelessWidget {
   final List<Entry> entries;
@@ -8,7 +9,7 @@ class Summary extends StatelessWidget {
 
   int _itemsCount() => entries.length;
 
-  String _sugarEaten() {
+  String _sugarEatenFormatted() {
     double sum = 0.0;
     entries.forEach((entry) {
       sum += entry.sugar;
@@ -17,7 +18,7 @@ class Summary extends StatelessWidget {
     return sum.toStringAsFixed(3);
   }
 
-  String _todaysSugar() {
+  double _todaysSugar() {
     var date = DateTime.now();
     var nowMinusDay = date.subtract(Duration(days: 1));
 
@@ -28,6 +29,11 @@ class Summary extends StatelessWidget {
       }
     });
 
+    return sum;
+  }
+
+  String _todaysSugarFormatted() {
+    double sum = _todaysSugar();
     return sum.toStringAsFixed(1);
   }
 
@@ -42,10 +48,10 @@ class Summary extends StatelessWidget {
                 children: <Widget>[
                   Row(children: <Widget>[
                     defaultText('Today\'s sugar: ', 28),
-                    defaultText("${_todaysSugar()}g", 28, Colors.lightGreenAccent),
+                    defaultText("${_todaysSugarFormatted()}g", 28, ColorTool.colorByAmount(_todaysSugar())),
                   ]),
                   defaultText('Item\'s count: ${_itemsCount()}', 18),
-                  defaultText('Sugar eaten: ${_sugarEaten()}kg', 18),
+                  defaultText('Sugar eaten: ${_sugarEatenFormatted()}kg', 18),
                 ]))
       ]));
 
