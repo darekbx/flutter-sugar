@@ -21,8 +21,8 @@ class _SugarPageState extends State<SugarPage> {
   void _showEntryDialog(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext context) =>  EntryDialog(callback: () => setState(() {}))
-    );
+        builder: (BuildContext context) =>
+            EntryDialog(callback: () => setState(() {})));
   }
 
   @override
@@ -41,9 +41,34 @@ class _SugarPageState extends State<SugarPage> {
     );
   }
 
-  Widget _chart() => Container(
-      color: Colors.blueGrey,
-      child: CustomPaint(painter: Chart(), child: Container(height: 70)));
+  Widget _chart() => FutureBuilder(
+      future: repository.chartValues(),
+      builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) =>
+          _handleChartFuture(snapshot, (data) {
+            return CustomPaint(
+                painter: Chart(data), 
+                child: Container(height: 70)
+            );
+          }));
+
+  _handleChartFuture(
+      AsyncSnapshot<List<double>> snapshot, Function(List<double>) callback) {
+    switch (snapshot.connectionState) {
+      case ConnectionState.none:
+      case ConnectionState.waiting:
+        return _buildLoadingView();
+      default:
+        if (snapshot.hasError) {
+          return _buildError(snapshot.error);
+        } else {
+          if (snapshot.data == null) {
+            return _buildError("Error :( ");
+          } else {
+            return callback(snapshot.data);
+          }
+        }
+    }
+  }
 
   Widget _summary() => FutureBuilder(
       future: repository.list(),

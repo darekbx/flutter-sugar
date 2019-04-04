@@ -43,6 +43,19 @@ class DatabaseProvider {
   Future<int> add(Entry entry) async =>
       await (await database).insert("entries", entry.toMap());
 
+  Future<List<double>> daySummary() async {
+    var query = """
+      SELECT 
+        SUM(sugar) AS sum, 
+        strftime('%Y-%m-%d',DATETIME(timestamp, 'unixepoch')) 
+      FROM entries 
+      GROUP BY strftime('%Y-%m-%d',DATETIME(timestamp, 'unixepoch'))""";
+    var cursor = await (await database).rawQuery(query);
+    return cursor.isNotEmpty
+        ? cursor.map((row) => row['sum'] as double).toList()
+        : List<double>();
+  }
+
   list() async {
     var cursor = await (await database).query("entries", orderBy: "timestamp DESC");
     return cursor.isNotEmpty

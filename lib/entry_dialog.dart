@@ -87,7 +87,7 @@ class _EntryDialogState extends State<EntryDialog> {
           errorText: _sugarError ? "Amount is invalid" : null));
 
   Widget _calculateButton() => FlatButton(
-        child: Icon(Icons.blur_on),
+        child: Icon(Icons.keyboard),
         onPressed: () {},
       );
 }

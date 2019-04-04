@@ -15,6 +15,10 @@ class Repository {
     return Map.from(entriesMap);
   }
 
+  Future<List<double>> chartValues() async {
+    return await DatabaseProvider.instance.daySummary();
+  }
+
   Future<int> add(Entry entry) async =>
       await DatabaseProvider.instance.add(entry);
   Future<int> delete(int id) async =>
