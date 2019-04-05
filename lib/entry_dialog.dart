@@ -70,24 +70,30 @@ class _EntryDialogState extends State<EntryDialog> {
     widget.callback();
   }
 
-  Widget _descriptionInput() => TextField(
+  Widget _descriptionInput() => Padding(
+    padding: EdgeInsets.only(bottom: 10.0),
+    child: TextField(
       controller: _descriptionController,
+      textCapitalization: TextCapitalization.sentences,
+      autofocus: true,
       decoration: InputDecoration(
-          border: InputBorder.none,
           hintText: 'Description',
           errorText:
-              _descriptionError ? "Description can't be empty" : null));
+              _descriptionError ? "Description can't be empty" : null))
+  );
 
   Widget _sugarInput() => TextField(
       controller: _sugarController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-          border: InputBorder.none,
           hintText: 'Sugar [g]',
           errorText: _sugarError ? "Amount is invalid" : null));
 
-  Widget _calculateButton() => FlatButton(
+  Widget _calculateButton() => Padding(
+    padding: EdgeInsets.only(left: 12.0),
+    child: RaisedButton(
         child: Icon(Icons.keyboard),
         onPressed: () {},
-      );
+      )
+  );
 }

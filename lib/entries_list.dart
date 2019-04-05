@@ -12,10 +12,10 @@ class EntryList extends StatelessWidget {
     var keys = entries.keys.toList();
     var values = entries.values.toList();
     return ListView.builder(
-
+      padding: EdgeInsets.all(0.0),
       itemCount: entries.length,
       itemBuilder: (BuildContext context, int index) {
-        return ExpansionTile(
+        return ExpansionTile(   
             title: _createTitleEntry(keys[index], values[index]),
             children: _createSubEntry(values[index]));
       },
@@ -30,7 +30,7 @@ class EntryList extends StatelessWidget {
       children: <Widget>[
         Text("$date (${entries.length})"),
         Text(
-          "$sum", 
+          "${sum.toStringAsFixed(1)}", 
           style: TextStyle(
             fontWeight: FontWeight.bold, 
             color: ColorTool.colorByAmount(sum))
@@ -40,14 +40,17 @@ class EntryList extends StatelessWidget {
   }
 
   List<Widget> _createSubEntry(List<Entry> entries) {
-    return entries.map((entry) {
+    return entries.reversed.map((entry) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 0.0, 56.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 0.0, 54.0, 4.0),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Padding(padding: EdgeInsets.fromLTRB(0, 0, 8.0, 0), child: Text(entry.name)), 
-                Text("${entry.sugar}", style: TextStyle(fontWeight: FontWeight.bold))
+                SizedBox(
+                  child: Text("${entry.sugar}", style: TextStyle(fontWeight: FontWeight.bold)),
+                  width: 30.0,
+                )
               ]));
     }).toList();
   }

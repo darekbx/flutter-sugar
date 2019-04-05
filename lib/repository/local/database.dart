@@ -47,9 +47,9 @@ class DatabaseProvider {
     var query = """
       SELECT 
         SUM(sugar) AS sum, 
-        strftime('%Y-%m-%d',DATETIME(timestamp, 'unixepoch')) 
+        strftime('%Y-%m-%d',DATETIME(timestamp/1000, 'unixepoch'))
       FROM entries 
-      GROUP BY strftime('%Y-%m-%d',DATETIME(timestamp, 'unixepoch'))""";
+      GROUP BY strftime('%Y-%m-%d',DATETIME(timestamp/1000, 'unixepoch'))""";
     var cursor = await (await database).rawQuery(query);
     return cursor.isNotEmpty
         ? cursor.map((row) => row['sum'] as double).toList()

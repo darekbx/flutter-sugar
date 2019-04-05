@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'repository/repository.dart';
 import 'package:flutter_sugar/model/entry.dart';
 import 'entries_list.dart';
@@ -19,10 +20,25 @@ class _SugarPageState extends State<SugarPage> {
   var repository = Repository();
 
   void _showEntryDialog(BuildContext context) {
+
+    //_import();
+
     showDialog(
         context: context,
         builder: (BuildContext context) =>
             EntryDialog(callback: () => setState(() {})));
+  }
+
+  void _import() async {
+    var jsonString = await DefaultAssetBundle.of(context).loadString("assets/sugar_export.json");
+    List<dynamic> json = jsonDecode(jsonString);
+    
+    json.forEach((row) async {
+      var description = row["description"];
+      var amount = row["amount"];
+      var date = row["date"];
+      await repository.add(Entry(null, description, amount, date));
+    });
   }
 
   @override

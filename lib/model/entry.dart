@@ -1,3 +1,5 @@
+import 'package:flutter_sugar/date_utils.dart';
+
 class Entry {
   
   int id;
@@ -9,9 +11,7 @@ class Entry {
 
   String dateTime() {
     var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
-    var month = date.month.toString().padLeft(2, '0');
-    var day = date.day.toString().padLeft(2, '0');
-    return "${date.year}-$month-$day";
+    return DateUtils.formatDate(date);
   }
 
   factory Entry.fromMap(Map<String, dynamic> row) =>

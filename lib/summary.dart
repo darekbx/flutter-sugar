@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sugar/model/entry.dart';
 import 'color_tool.dart';
+import 'date_utils.dart';
 
 class Summary extends StatelessWidget {
   final List<Entry> entries;
@@ -20,11 +21,11 @@ class Summary extends StatelessWidget {
 
   double _todaysSugar() {
     var date = DateTime.now();
-    var nowMinusDay = date.subtract(Duration(days: 1));
+    var nowString = DateUtils.formatDate(date);
 
     double sum = 0.0;
     entries.forEach((entry) {
-      if (entry.timestamp > nowMinusDay.millisecondsSinceEpoch) {
+      if (entry.dateTime() == nowString) {
         sum += entry.sugar;
       }
     });
