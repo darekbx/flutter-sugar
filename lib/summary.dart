@@ -47,23 +47,22 @@ class Summary extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
+                  Row(children: <Widget>[
                     defaultText('Today\'s sugar: ', 28),
-                    defaultText("${_todaysSugarFormatted()}g", 28, ColorTool.colorByAmount(_todaysSugar()))
+                    defaultText("${_todaysSugarFormatted()}g", 28,
+                        ColorTool.colorByAmount(_todaysSugar()))
                   ]),
                   defaultText('Item\'s count: ${_itemsCount()}', 18),
                   defaultText('Sugar eaten: ${_sugarEatenFormatted()}kg', 18),
                 ])),
-                Spacer(flex: 2),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child:
-                    IconButton(
-                      icon: Icon(Icons.settings, color: Colors.white), 
-                      onPressed: () { },
-                    )
-  )]));
+        Spacer(flex: 2),
+        Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () {},
+            ))
+      ]));
 
   Widget defaultText(String text, double size, [Color color = Colors.white]) =>
       Text(
