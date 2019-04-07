@@ -10,6 +10,7 @@ class SugarApp extends StatelessWidget {
       title: 'Sugar',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
       home: SugarPage(title: 'Sugar'),
+      
     );
   }
 }
