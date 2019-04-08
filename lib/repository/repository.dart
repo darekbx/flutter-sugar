@@ -6,6 +6,11 @@ import 'package:flutter_sugar/model/entry.dart';
 
 class Repository {
   
+  Future<List<Entry>> distinctList() async {
+    List<Entry> entries = await DatabaseProvider.instance.list();
+    return entries;
+  }
+
   Future<Map<String, List<Entry>>> list() async {
     List<Entry> entries = await DatabaseProvider.instance.list();
     if (entries.length == 0) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sugar/model/entry.dart';
 import 'color_tool.dart';
 import 'date_utils.dart';
+import 'settings_page.dart';
 
 class Summary extends StatelessWidget {
   final List<Entry> entries;
@@ -60,7 +61,9 @@ class Summary extends StatelessWidget {
             padding: EdgeInsets.only(bottom: 10),
             child: IconButton(
               icon: Icon(Icons.settings, color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+              },
             ))
       ]));
 
