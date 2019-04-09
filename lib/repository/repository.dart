@@ -7,7 +7,7 @@ import 'package:flutter_sugar/model/entry.dart';
 class Repository {
   
   Future<List<Entry>> distinctList() async {
-    List<Entry> entries = await DatabaseProvider.instance.list();
+    List<Entry> entries = await DatabaseProvider.instance.distinctList();
     return entries;
   }
 

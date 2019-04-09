@@ -7,6 +7,7 @@ class EntryDialog extends StatefulWidget {
   EntryDialog({this.callback});
 
   final Function() callback;
+  final List<Entry> _data = List();
 
   @override
   _EntryDialogState createState() => _EntryDialogState();
@@ -19,7 +20,6 @@ class _EntryDialogState extends State<EntryDialog> {
   bool _descriptionError = false;
   bool _sugarError = false;
   TextEditingController controller = new TextEditingController();
-  List<Entry> _data = List();
 
   @override
   void initState() {
@@ -39,7 +39,8 @@ class _EntryDialogState extends State<EntryDialog> {
   void _loadEntries() async {
     var entries = await Repository().distinctList();
     setState(() {
-      _data = entries;
+      widget._data.clear();
+      widget._data.addAll(entries);
     });
   }
 
@@ -69,27 +70,29 @@ class _EntryDialogState extends State<EntryDialog> {
   _autocompleteDescription(BuildContext context) {
     _descriptionTextField = AutoCompleteTextField<Entry>(
         decoration: InputDecoration(
-            suffixIcon: Container(
-              width: 85.0,
-              height: 60.0,
-            ),
-            filled: true,
             hintText: 'Description',
             errorText: _descriptionError ? "Description can't be empty" : null),
-        itemBuilder: (context, item) => Text(item.name),
-        itemFilter: (item, query) =>
-            item.name.toLowerCase().startsWith(query.toLowerCase()),
+        itemBuilder: (context, item) => _dropDownItem(item),
+        itemFilter: (item, query) => _itemFilter(item, query),
         itemSorter: (a, b) => a.name.compareTo(b.name),
         itemSubmitted: (item) {
           setState(() {
             _descriptionTextField.textField.controller.text = item.name;
+            _sugarController.text = item.sugar.toString();
           });
         },
         clearOnSubmit: false,
-        suggestions: _data,
+        suggestions: widget._data,
         key: _key);
     return _descriptionTextField;
   }
+
+  _dropDownItem(Entry entry) => Padding(
+    padding: EdgeInsets.all(8.0),
+    child: Text("${entry.name} (${entry.sugar}g)")
+  );
+
+  _itemFilter(item, query) => item.name.toLowerCase().startsWith(query.toLowerCase());
 
   _saveEntry(BuildContext context) async {
     var description = _descriptionTextField.textField.controller.text;

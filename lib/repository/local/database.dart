@@ -58,11 +58,20 @@ class DatabaseProvider {
 
   list() async {
     var cursor = await (await database).query("entries", orderBy: "timestamp DESC");
-    return cursor.isNotEmpty
-        ? cursor.map((row) => Entry.fromMap(row)).toList()
-        : List<Entry>();
+    return _cursorToList(cursor);
+  }
+
+  distinctList() async {
+    var cursor = await (await database).rawQuery("SELECT id, name, sugar, timestamp FROM entries GROUP BY name");
+    return _cursorToList(cursor);
   }
 
   Future<int> delete(int id) async => await (await database)
       .delete("entries", where: "id = ?", whereArgs: [id]);
+
+  List<Entry> _cursorToList(List<Map<String, dynamic>> cursor) {
+    return cursor.isNotEmpty
+        ? cursor.map((row) => Entry.fromMap(row)).toList()
+        : List<Entry>();
+  }
 }
