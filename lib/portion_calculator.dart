@@ -75,7 +75,7 @@ class _PortionCalculatorState extends State<PortionCalculator> {
     var weight = double.tryParse(_weightController.text);
     if (portionWeight != null && sugarWeight != null && weight != null) {
       var result = portionWeight * sugarWeight / weight;
-      _resultController.text = result.toString();
+      _resultController.text = result.toStringAsFixed(1);
     } else {
       _resultController.text = "0";
     }
