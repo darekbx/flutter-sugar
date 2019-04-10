@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sugar/model/entry.dart';
 import 'repository/repository.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'portion_calculator.dart';
 
 class EntryDialog extends StatefulWidget {
   EntryDialog({this.callback});
@@ -51,7 +52,7 @@ class _EntryDialogState extends State<EntryDialog> {
         _autocompleteDescription(context),
         Row(children: <Widget>[
           Flexible(flex: 3, child: _sugarInput()),
-          Flexible(flex: 1, child: _calculateButton())
+          Flexible(flex: 1, child: _calculateButton(context))
         ])
       ]),
       actions: <Widget>[
@@ -99,10 +100,8 @@ class _EntryDialogState extends State<EntryDialog> {
     var sugar = _sugarController.text;
 
     setState(() {
-      _descriptionError =
-          _descriptionTextField.textField.controller.text.isEmpty;
-      _sugarError =
-          _sugarController.text.isEmpty || double.tryParse(sugar) == null;
+      _descriptionError = _descriptionTextField.textField.controller.text.isEmpty;
+      _sugarError = _sugarController.text.isEmpty || double.tryParse(sugar) == null;
     });
 
     if (_descriptionError || _sugarError) {
@@ -124,10 +123,22 @@ class _EntryDialogState extends State<EntryDialog> {
           hintText: 'Sugar [g]',
           errorText: _sugarError ? "Amount is invalid" : null));
 
-  Widget _calculateButton() => Padding(
+  Widget _calculateButton(BuildContext context) => Padding(
       padding: EdgeInsets.only(left: 12.0),
       child: RaisedButton(
         child: Icon(Icons.keyboard),
-        onPressed: () {},
+        onPressed: () => _openPortionCalculator(context),
       ));
+
+
+    void _openPortionCalculator(BuildContext context) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              PortionCalculator(callback: (amount) {
+                setState(() {
+                  _sugarController.text = amount.toString();
+                });
+              }));
+    }
 }
