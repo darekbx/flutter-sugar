@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sugar/model/entry.dart';
+import 'package:flutter_sugar/repository/repository.dart';
 import 'color_tool.dart';
 
 class EntryList extends StatelessWidget {
@@ -15,9 +16,9 @@ class EntryList extends StatelessWidget {
       padding: EdgeInsets.all(0.0),
       itemCount: entries.length,
       itemBuilder: (BuildContext context, int index) {
-        return ExpansionTile(   
+        return ExpansionTile(
             title: _createTitleEntry(keys[index], values[index]),
-            children: _createSubEntry(values[index]));
+            children: _createSubEntry(values[index], context));
       },
     );
   }
@@ -30,28 +31,48 @@ class EntryList extends StatelessWidget {
       children: <Widget>[
         Text("$date (${entries.length})"),
         Text(
-          "${sum.toStringAsFixed(1)}", 
-          style: TextStyle(
-            fontWeight: FontWeight.bold, 
-            color: ColorTool.colorByAmount(sum))
+            "${sum.toStringAsFixed(1)}",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: ColorTool.colorByAmount(sum))
         )
       ],
     );
   }
 
-  List<Widget> _createSubEntry(List<Entry> entries) {
+  List<Widget> _createSubEntry(List<Entry> entries, context) {
     return entries.reversed.map((entry) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 0.0, 54.0, 4.0),
-          child: Row(
+          padding: EdgeInsets.fromLTRB(0.0, 0.0, 54.0, 4.0),
+          child: InkWell(child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Padding(padding: EdgeInsets.fromLTRB(0, 0, 8.0, 0), child: Text(entry.name)), 
+                Padding(padding: EdgeInsets.fromLTRB(0, 0, 8.0, 0),
+                    child: Text(entry.name)),
                 SizedBox(
-                  child: Text("${entry.sugar}", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text("${entry.sugar}",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   width: 30.0,
                 )
-              ]));
+              ]), onLongPress: () {
+            Repository().delete(entry.id);
+            _showDeleteDialog(context);
+          }));
     }).toList();
+  }
+
+  _showDeleteDialog(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Item deleted, reload app to refresh'),
+            children: <Widget>[
+              SimpleDialogOption(
+                  child: Text("OK"), onPressed: () => Navigator.pop(context))
+            ],
+          );
+        }
+    );
   }
 }
